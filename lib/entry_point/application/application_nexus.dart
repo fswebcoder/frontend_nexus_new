@@ -1,10 +1,14 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:frontend_nexus/core/network/connectivity_service.dart' show ConnectivityStatus;
+import 'package:frontend_nexus/core/utils/index.dart' show GlobalConnectivityService;
+import 'package:frontend_nexus/entry_point/application/config/global_message.dart';
+import 'package:frontend_nexus/entry_point/application/router/app_router.dart';
+import 'package:frontend_nexus/entry_point/ui/shared/widgets/network/connectivity_overlay.dart' show ConnectivityWrapper;
+import 'package:frontend_nexus/injector.dart' show getIt;
 
-import '../../core/utils/index.dart';
-import '../ui/shared/widgets/connectivity_overlay.dart';
-import '../../injector.dart';
+
+import '../../core/utils/singleton_shared_preferences/singleton_shared_preferences_imp.dart' show SingletonSharedPreferencesImp;
+import 'config/app_constants.dart';
 
 class ApplicationNexus extends StatefulWidget {
   const ApplicationNexus({super.key});
@@ -21,17 +25,14 @@ class _ApplicationNexusState extends State<ApplicationNexus>
   @override
   void initState() {
     super.initState();
-    // Inicializamos las variables de manera eficiente
     modoOscuro = SingletonSharedPreferencesImp().darkMode ?? false;
     _connectivityService = getIt<GlobalConnectivityService>();
     
-    // Registramos el observer para el ciclo de vida
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    // Limpiamos los recursos
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -39,7 +40,6 @@ class _ApplicationNexusState extends State<ApplicationNexus>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      // Verificamos la conectividad cuando la app vuelve al primer plano
       _connectivityService.checkConnectivity();
     }
   }
@@ -53,72 +53,18 @@ class _ApplicationNexusState extends State<ApplicationNexus>
       onRetry: () async {
         await _connectivityService.checkConnectivity();
       },
-      customMessage: 'No hay conexión a internet.\n'
-                    'Puedes continuar usando la app con funcionalidades limitadas.',
+      customMessage: GlobalMessage.noHayConexion,
       showConnectionStatus: true,
-      child: MaterialApp(
-        title: 'Frontend Nexus',
+      child: MaterialApp.router(
+        routerConfig: appRouter,
+        title: AppConstants.appName,
         theme: ThemeData.light(),
         darkTheme: ThemeData.dark(),
         themeMode: modoOscuro ? ThemeMode.dark : ThemeMode.light,
         debugShowCheckedModeBanner: false,
-        home: _buildHomePage(),
       ),
     );
   }
 
-  Widget _buildHomePage() {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Frontend Nexus'),
-        actions: [
-          // Indicador de conectividad en el AppBar
-          StreamBuilder<ConnectivityStatus>(
-            stream: _connectivityService.connectivityStream,
-            builder: (context, snapshot) {
-              final isConnected = snapshot.data == ConnectivityStatus.connected;
-              log('isConnected: $isConnected');
-              return Container(
-                margin: const EdgeInsets.only(right: 16),
-                child: Row(
-                  children: [
-                    Icon(
-                      isConnected ? Icons.wifi_rounded : Icons.wifi_off_rounded,
-                      color: isConnected ? Colors.green : Colors.red,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      isConnected ? 'Online' : 'Offline',
-                      style: TextStyle(
-                        color: isConnected ? Colors.green : Colors.red,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Tu aplicación Frontend Nexus',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Sistema de conectividad global implementado ✅',
-              style: TextStyle(fontSize: 16, color: Colors.green),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+ 
 }

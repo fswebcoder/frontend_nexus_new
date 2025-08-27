@@ -14,9 +14,10 @@ class ConnectivityServiceImpl implements ConnectivityService {
   final StreamController<ConnectivityStatus> _connectivityController =
       StreamController<ConnectivityStatus>.broadcast();
   
-  ConnectivityStatus _currentStatus = ConnectivityStatus.connected;
+  ConnectivityStatus _currentStatus = ConnectivityStatus.unknown;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   Timer? _debounceTimer;
+  bool _isInitialized = false;
 
   @override
   Stream<ConnectivityStatus> get connectivityStream =>
@@ -30,13 +31,19 @@ class ConnectivityServiceImpl implements ConnectivityService {
 
   @override
   Future<void> initialize() async {
-    _connectivityController.add(_currentStatus);
+    if (_isInitialized) return;
     
-    await checkConnectivity();
-        _connectivitySubscription = _connectivity.onConnectivityChanged
-        .listen((List<ConnectivityResult> results) {
-      _debounceConnectivityChange(results);
-    });
+    try {
+      await checkConnectivity();
+      _connectivitySubscription = _connectivity.onConnectivityChanged
+          .listen((List<ConnectivityResult> results) {
+        _debounceConnectivityChange(results);
+      });
+      
+      _isInitialized = true;
+    } catch (e) {
+      _updateStatus(ConnectivityStatus.unknown);
+    }
   }
 
   @override
@@ -44,6 +51,7 @@ class ConnectivityServiceImpl implements ConnectivityService {
     _debounceTimer?.cancel();
     await _connectivitySubscription?.cancel();
     await _connectivityController.close();
+    _isInitialized = false;
   }
 
   @override
@@ -55,7 +63,6 @@ class ConnectivityServiceImpl implements ConnectivityService {
       await _handleConnectivityChange(connectivityResults);
       return _currentStatus;
     } catch (e) {
-      debugPrint('Error checking connectivity: $e');
       _updateStatus(ConnectivityStatus.unknown);
       return ConnectivityStatus.unknown;
     }
@@ -63,7 +70,7 @@ class ConnectivityServiceImpl implements ConnectivityService {
 
   void _debounceConnectivityChange(List<ConnectivityResult> results) {
     _debounceTimer?.cancel();
-    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+    _debounceTimer = Timer(const Duration(milliseconds: 300), () {
       _handleConnectivityChange(results);
     });
   }
@@ -81,15 +88,13 @@ class ConnectivityServiceImpl implements ConnectivityService {
           ? ConnectivityStatus.connected
           : ConnectivityStatus.disconnected);
     } catch (e) {
-      debugPrint('Error handling connectivity change: $e');
       _updateStatus(ConnectivityStatus.unknown);
     }
   }
 
-
   Future<bool> _hasInternetConnection() async {
     try {
-      final testUrls = [
+      const testUrls = [
         'https://www.google.com/generate_204', 
         'https://httpbin.org/status/200',      
         'https://jsonplaceholder.typicode.com/posts/1',
@@ -100,7 +105,7 @@ class ConnectivityServiceImpl implements ConnectivityService {
       }
       
       try {
-        if (Platform.isAndroid || Platform.isIOS) {
+        if (Platform.isAndroid || Platform.isIOS || Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
           final result = await InternetAddress.lookup('8.8.8.8')
               .timeout(const Duration(seconds: 2));
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -113,7 +118,6 @@ class ConnectivityServiceImpl implements ConnectivityService {
       
       return await _testHttpConnectivity(testUrls);
     } catch (e) {
-      debugPrint('Internet connection test failed: $e');
       return false;
     }
   }
@@ -128,17 +132,14 @@ class ConnectivityServiceImpl implements ConnectivityService {
           return true;
         }
       } catch (e) {
-        debugPrint('HTTP test failed for $url: $e');
         continue;
       }
     }
     return false;
   }
 
-  /// Actualiza el estado y notifica a los listeners
   void _updateStatus(ConnectivityStatus status) {
     if (_currentStatus != status) {
-      debugPrint('Connectivity status changed: $_currentStatus -> $status');
       _currentStatus = status;
       _connectivityController.add(status);
     }

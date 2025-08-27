@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,23 +22,30 @@ void main() async {
   final connectivityService = getIt<GlobalConnectivityService>();
   await GlobalConnectivityService.initialize(connectivityService);
 
-  ConfigurationDbSourceAdapter configurationDbSourceAdapter =
-      ConfigurationDbSourceAdapter();
-
-  bool darkMode = false;
-
+  final configurationDbSourceAdapter = ConfigurationDbSourceAdapter();
+  
+  try {
     final savedDarkMode = await configurationDbSourceAdapter.getDarkMode();
-    darkMode = savedDarkMode ?? false;
-
-  SingletonSharedPreferencesImp().darkMode = darkMode;
+    final darkMode = savedDarkMode ?? false;
+    SingletonSharedPreferencesImp().darkMode = darkMode;
+  } catch (e) {
+    SingletonSharedPreferencesImp().darkMode = false;
+  }
 
   LicenseRegistry.addLicense(() async* {
-    final license = await rootBundle.loadString('google_fonts/LICENSE.txt');
-    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+    try {
+      final license = await rootBundle.loadString('google_fonts/LICENSE.txt');
+      yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+    } catch (e) {
+      debugPrint('Error loading license: $e');
+    }
   });
 
-  var appSettings =
-      AppSettings(baseUrl: ConfigDefine.apiBase, mode: AppCompilationMode.main);
+  final appSettings = AppSettings(
+    baseUrl: ConfigDefine.apiBase, 
+    mode: AppCompilationMode.main
+  );
   Application().appSettings = appSettings;
+
   runApp(const ApplicationNexus());
 }
