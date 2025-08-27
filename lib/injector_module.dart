@@ -1,5 +1,6 @@
 import 'package:frontend_nexus/entry_point/application/index.dart';
 import 'package:injectable/injectable.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'core/utils/index.dart';
 
@@ -11,4 +12,7 @@ abstract class InjectorModule {
   @lazySingleton
   SingletonSharedPreferences get singletonSharedPreferences =>
       SingletonSharedPreferencesImp();
+
+  @lazySingleton
+  Connectivity get connectivity => Connectivity();
 }
