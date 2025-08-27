@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend_nexus/entry_point/application/config/app_routes.dart';
+import 'package:frontend_nexus/entry_point/ui/screens/auth/login_screen.dart';
 import 'package:frontend_nexus/entry_point/ui/shared/widgets/splash/splash.dart';
 import 'package:go_router/go_router.dart';
 
@@ -108,7 +110,7 @@ final GoRouter appRouter = GoRouter(
     // Splash Screen con fade
     GoRoute(
       path: '/',
-      name: 'splash',
+      name: AppRoutes.initialRoute,
       pageBuilder: (context, state) => buildPageWithFadeTransition(
         context: context,
         state: state,
@@ -119,13 +121,13 @@ final GoRouter appRouter = GoRouter(
     // Home con animación iOS default
     GoRoute(
       path: '/login',
-      name: 'login',
+      name: AppRoutes.loginRoute,
       pageBuilder: (context, state) => buildPageWithDefaultTransition(
         context: context,
         state: state,
-        child: const Placeholder(),
+        child: const LoginScreen(),
       ),
-      routes: [
+      routes: const [
        
       ],
     ),
