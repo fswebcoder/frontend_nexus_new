@@ -346,6 +346,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  idb_shim:
+    dependency: transitive
+    description:
+      name: idb_shim
+      sha256: ee391deb010143823d25db15f8b002945e19dcb5f2dd5b696a98cb6db7644012
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.7"
   injectable:
     dependency: "direct main"
     description:
@@ -646,10 +654,18 @@ packages:
     dependency: "direct main"
     description:
       name: sembast
-      sha256: "6cf9acde19bd88dba9ea8090d3e50725cdc70fc7cf1c117c26e79c257884b04b"
+      sha256: "7119cf6f79bd1d48c8ec7943f4facd96c15ab26823021ed0792a487c7cd34441"
       url: "https://pub.dev"
     source: hosted
-    version: "3.8.2"
+    version: "3.8.5+1"
+  sembast_web:
+    dependency: "direct main"
+    description:
+      name: sembast_web
+      sha256: "0362c7c241ad6546d3e27b4cfffaae505e5a9661e238dbcdd176756cc960fe7a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.2"
   shelf:
     dependency: transitive
     description:
@@ -719,6 +735,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  super_tooltip:
+    dependency: "direct main"
+    description:
+      name: super_tooltip
+      sha256: "06f734caa2ddb2313813dac2c939f096222beece9c146ec7d71e07e6e869bef2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   synchronized:
     dependency: transitive
     description:

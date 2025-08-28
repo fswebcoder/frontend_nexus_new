@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' show InternetAddress;
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:injectable/injectable.dart';
@@ -104,16 +104,17 @@ class ConnectivityServiceImpl implements ConnectivityService {
         return await _testHttpConnectivity(testUrls);
       }
       
-      try {
-        if (Platform.isAndroid || Platform.isIOS || Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      // Solo intentar DNS lookup en plataformas nativas (no web)
+      if (!kIsWeb) {
+        try {
           final result = await InternetAddress.lookup('8.8.8.8')
               .timeout(const Duration(seconds: 2));
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
             return true;
           }
+        } catch (e) {
+          debugPrint('DNS lookup failed, trying HTTP: $e');
         }
-      } catch (e) {
-        debugPrint('DNS lookup failed, trying HTTP: $e');
       }
       
       return await _testHttpConnectivity(testUrls);

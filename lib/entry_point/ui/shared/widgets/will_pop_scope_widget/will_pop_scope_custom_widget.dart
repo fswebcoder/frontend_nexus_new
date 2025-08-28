@@ -1,5 +1,6 @@
-import 'dart:io';
+import 'dart:io' show Platform;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class WillPopScopeCustomWidget extends StatelessWidget {
@@ -13,7 +14,10 @@ class WillPopScopeCustomWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Platform.isAndroid
+    // En web, usar PopScope. En móvil, detectar Android
+    final bool usePopScope = kIsWeb || (!kIsWeb && Platform.isAndroid);
+    
+    return usePopScope
         ? PopScope(
             canPop: false,
             child: child,
