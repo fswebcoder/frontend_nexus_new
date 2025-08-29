@@ -82,17 +82,17 @@ class _CustomInputState extends State<CustomInput> {
           children: [
             Text(
               widget.label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             if (widget.tooltip != null) ...[
               const SizedBox(width: 6),
               SuperTooltip(
                 controller: tooltipController,
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.surface,
                 borderRadius: 8,
                 arrowTipDistance: 8,
                 popupDirection: TooltipDirection.up,
@@ -103,7 +103,11 @@ class _CustomInputState extends State<CustomInput> {
                   color: Colors.transparent,
                   child: Text(
                     widget.tooltip!,
-                    style: const TextStyle(color: Colors.black),
+                    style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark 
+                ? Colors.white70 
+                : AppColors.blackColor,
+          ),
                   ),
                 ),
                 child: GestureDetector(
@@ -114,10 +118,10 @@ class _CustomInputState extends State<CustomInput> {
                       tooltipController.showTooltip();
                     }
                   },
-                  child: const Icon(
+                  child: Icon(
                     Icons.info_outline,
                     size: 18,
-                    color: Colors.white70,
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
               ),
@@ -131,15 +135,25 @@ class _CustomInputState extends State<CustomInput> {
           keyboardType: widget.keyboardType,
           obscureText: widget.obscureText,
           validator: widget.validator,
-          style: const TextStyle(color: Colors.black),
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark 
+                ? Colors.white70 
+                : AppColors.blackColor,
+          ),
           initialValue: widget.controller == null ? widget.initialValue : null,
           onChanged: widget.onChanged,
           onFieldSubmitted: widget.onSubmitted,
           decoration: InputDecoration(
             hintText: widget.hintText,
-            hintStyle: const TextStyle(color: Colors.black54),
+            hintStyle: TextStyle(
+              color: Theme.of(context).brightness == Brightness.dark 
+                  ? Colors.white38 
+                  : AppColors.hintColor,
+            ),
             filled: true,
-            fillColor: Colors.white,
+            fillColor: Theme.of(context).brightness == Brightness.dark 
+                ? Theme.of(context).colorScheme.surface.withValues(alpha: 0.1)
+                : Colors.white,
             errorStyle: const TextStyle(
               color: AppColors.errorColor,
               fontSize: 12,
@@ -160,17 +174,31 @@ class _CustomInputState extends State<CustomInput> {
               ),
             ),
             contentPadding: const EdgeInsets.symmetric(
-              vertical: 8,
-              horizontal: 8,
+              vertical: 12,
+              horizontal: 16,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
+              borderSide: BorderSide(
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? Colors.grey.withValues(alpha: 0.3)
+                    : Colors.grey.withValues(alpha: 0.2),
+                width: 1.0,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? Colors.grey.withValues(alpha: 0.3)
+                    : Colors.grey.withValues(alpha: 0.3),
+                width: 1.0,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                color: Colors.white,
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.primary,
                 width: 1.5,
               ),
             ),
@@ -178,14 +206,26 @@ class _CustomInputState extends State<CustomInput> {
                     widget.iconPosition == IconPosition.left
                 ? GestureDetector(
                     onTap: widget.onIconTap,
-                    child: Icon(widget.icon, color: AppColors.primaryColor),
+                    child: Icon(
+                      widget.icon, 
+                      color: Theme.of(context).brightness == Brightness.dark 
+                          ? Colors.white70 
+                          : AppColors.primaryColor,
+                      size: 20,
+                    ),
                   )
                 : null,
             suffixIcon: widget.icon != null &&
                     widget.iconPosition == IconPosition.right
                 ? GestureDetector(
                     onTap: widget.onIconTap,
-                    child: Icon(widget.icon, color: AppColors.primaryColor),
+                    child: Icon(
+                      widget.icon, 
+                      color: Theme.of(context).brightness == Brightness.dark 
+                          ? Colors.white70 
+                          : AppColors.primaryColor,
+                      size: 20,
+                    ),
                   )
                 : null,
           ),

@@ -59,25 +59,21 @@ class CustomDialog extends StatelessWidget {
         minWidth: 280,
       ),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? Colors.white.withValues(alpha: 0.15)
-            : Colors.white.withValues(alpha: 0.85),
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white.withValues(alpha: 0.2)
-              : Colors.white.withValues(alpha: 0.6),
+          color: Theme.of(context).colorScheme.outline,
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            color: Theme.of(context).colorScheme.shadow.withOpacity(0.08),
             blurRadius: 32,
             spreadRadius: 0,
             offset: const Offset(0, 12),
           ),
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Theme.of(context).colorScheme.shadow.withOpacity(0.04),
             blurRadius: 16,
             spreadRadius: 0,
             offset: const Offset(0, 4),
@@ -93,15 +89,10 @@ class CustomDialog extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: Theme.of(context).brightness == Brightness.dark
-                    ? [
-                        Colors.white.withValues(alpha: 0.1),
-                        Colors.white.withValues(alpha: 0.05),
-                      ]
-                    : [
-                        Colors.white.withValues(alpha: 0.9),
-                        Colors.white.withValues(alpha: 0.7),
-                      ],
+                colors: [
+                  Theme.of(context).colorScheme.surface.withOpacity(0.9),
+                  Theme.of(context).colorScheme.surface.withOpacity(0.7),
+                ],
               ),
             ),
             child: Material(
@@ -132,13 +123,13 @@ class CustomDialog extends StatelessWidget {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: (iconColor ?? AppColors.primary).withValues(alpha: 0.1),
+              color: (iconColor ?? Theme.of(context).colorScheme.primary).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(32),
             ),
             child: Icon(
               icon,
               size: 32,
-              color: iconColor ?? AppColors.primary,
+              color: iconColor ?? Theme.of(context).colorScheme.primary,
             ),
           ),
           const SizedBox(height: 16),
@@ -215,14 +206,13 @@ class CustomDialog extends StatelessWidget {
   Widget _buildConfirmButton(BuildContext context) {
     return ElevatedButton(
       onPressed: onConfirm ?? () => Navigator.of(context).pop(true),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: confirmButtonColor ?? AppColors.primary,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+      style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
+        backgroundColor: WidgetStateProperty.all(
+          confirmButtonColor ?? Theme.of(context).colorScheme.primary,
         ),
-        elevation: 2,
+        foregroundColor: WidgetStateProperty.all(
+          Theme.of(context).colorScheme.onPrimary,
+        ),
       ),
       child: Text(
         confirmText ?? 'Continuar',

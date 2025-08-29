@@ -6,6 +6,7 @@ import 'package:frontend_nexus/core/utils/index.dart'
     show GlobalConnectivityService, SingletonSharedPreferencesImp;
 import 'package:frontend_nexus/entry_point/application/config/global_message.dart';
 import 'package:frontend_nexus/entry_point/application/router/app_router.dart';
+import 'package:frontend_nexus/entry_point/application/theme/app_theme.dart';
 import 'package:frontend_nexus/entry_point/ui/shared/widgets/inherited_widget/inherited_widget.dart';
 import 'package:frontend_nexus/entry_point/ui/shared/widgets/network/connectivity_overlay.dart'
     show ConnectivityWrapper;
@@ -66,7 +67,7 @@ class _ApplicationNexusState extends State<ApplicationNexus>
             child: MaterialApp.router(
               routerConfig: appRouter,
               title: AppConstants.appName,
-              theme: ThemeData.light(useMaterial3: true),
+              theme: !modoOscuro ? AppTheme.darkTheme : AppTheme.lightTheme,
               themeMode: modoOscuro ? ThemeMode.dark : ThemeMode.light,
               debugShowCheckedModeBanner: false,
               localizationsDelegates: const [

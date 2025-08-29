@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend_nexus/entry_point/application/config/app_colors.dart';
 import 'package:frontend_nexus/entry_point/ui/shared/widgets/index.dart';
 import 'package:frontend_nexus/entry_point/ui/shared/widgets/forms/textfield_strem_widget.dart';
 import 'package:local_auth/local_auth.dart';
@@ -22,7 +23,6 @@ class _LoginScreenState extends State<LoginScreen>
   final LocalAuthentication auth = LocalAuthentication();
   bool showButtonBiometrics = false;
 
-  // Controladores de animación
   late AnimationController _fadeController;
   late AnimationController _slideController;
   late AnimationController _logoController;
@@ -34,7 +34,6 @@ class _LoginScreenState extends State<LoginScreen>
   late Animation<double> _scaleAnimation;
   late Animation<double> _backgroundAnimation;
 
-  // Controladores del formulario
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -45,11 +44,9 @@ class _LoginScreenState extends State<LoginScreen>
   void initState() {
     super.initState();
 
-    // Inicializar animaciones
     _initAnimations();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // Solo verificar biometría en plataformas nativas (no web)
       if (!kIsWeb) {
         try {
           final biometricsAvailable = await auth.getAvailableBiometrics();
@@ -66,7 +63,6 @@ class _LoginScreenState extends State<LoginScreen>
         log('Biometrics not available on web platform');
       }
 
-      // Iniciar animaciones después de que se construya el widget
       _startAnimations();
     });
   }
@@ -138,49 +134,13 @@ class _LoginScreenState extends State<LoginScreen>
     });
   }
 
-  Future<void> _handleLogin() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      try {
-        // Simular proceso de login
-        await Future.delayed(const Duration(seconds: 2));
-
-        setState(() {
-          _isLoading = false;
-        });
-
-        // Aquí iría tu lógica de autenticación
-        _scaffoldMessengerKey.currentState?.showSnackBar(
-          const SnackBar(
-            content: Text('Login exitoso'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      } catch (e) {
-        setState(() {
-          _isLoading = false;
-        });
-
-        _scaffoldMessengerKey.currentState?.showSnackBar(
-          SnackBar(
-            content: Text('Error en login: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
 
   Future<void> _handleBiometricAuth() async {
     if (kIsWeb) {
-      // En web, mostrar mensaje que no está disponible
       _scaffoldMessengerKey.currentState?.showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text('Autenticación biométrica no disponible en web'),
-          backgroundColor: Colors.orange,
+          backgroundColor: Theme.of(context).colorScheme.secondary,
         ),
       );
       return;
@@ -196,15 +156,20 @@ class _LoginScreenState extends State<LoginScreen>
 
       if (didAuthenticate) {
         _scaffoldMessengerKey.currentState?.showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Autenticación biométrica exitosa'),
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.successColor,
           ),
         );
-        // Navegar a la siguiente pantalla
       }
     } catch (e) {
       log('Error en autenticación biométrica: $e');
+      _scaffoldMessengerKey.currentState?.showSnackBar(
+        SnackBar(
+          content: Text('Error en autenticación biométrica: $e'),
+          backgroundColor: AppColors.errorColor,
+        ),
+      );
     }
   }
 
@@ -247,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen>
                           shape: BoxShape.circle,
                           gradient: RadialGradient(
                             colors: [
-                              Colors.white.withValues(alpha: 0.1),
+                              Theme.of(context).colorScheme.surface.withValues(alpha: 0.1),
                               Colors.transparent,
                             ],
                           ),
@@ -273,7 +238,7 @@ class _LoginScreenState extends State<LoginScreen>
                           shape: BoxShape.circle,
                           gradient: RadialGradient(
                             colors: [
-                              Colors.blue.withValues(alpha: 0.1),
+                              Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                               Colors.transparent,
                             ],
                           ),
@@ -346,7 +311,7 @@ class _LoginScreenState extends State<LoginScreen>
         child: Text(
           '© 2025 Quintana SAS',
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.5),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
             fontSize: 12,
             fontWeight: FontWeight.w300,
           ),
@@ -367,15 +332,15 @@ class _LoginScreenState extends State<LoginScreen>
             constraints: const BoxConstraints(maxWidth: 500),
             padding: EdgeInsets.all(isWeb ? 24 : 28),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.1),
+              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
+                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
+                  color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.1),
                   blurRadius: 40,
                   spreadRadius: 0,
                 ),
@@ -485,18 +450,7 @@ class _LoginScreenState extends State<LoginScreen>
       height: 56,
       child: ElevatedButton(
         onPressed: null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white.withValues(alpha: 0.2),
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: BorderSide(
-              color: Colors.white.withValues(alpha: 0.3),
-              width: 1,
-            ),
-          ),
-        ),
+        style: Theme.of(context).elevatedButtonTheme.style,
         child: _isLoading
             ? SizedBox(
                 width: 24,
@@ -504,7 +458,7 @@ class _LoginScreenState extends State<LoginScreen>
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    Colors.white.withValues(alpha: 0.8),
+                    Theme.of(context).colorScheme.onPrimary,
                   ),
                 ),
               )
@@ -526,9 +480,10 @@ class _LoginScreenState extends State<LoginScreen>
         onPressed: () {},
         child: Text(
           '¿Olvidaste tu contraseña?',
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.8),
+          style: Theme.of(context).textButtonTheme.style?.textStyle?.resolve({}) ?? TextStyle(
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
             fontSize: 14,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
@@ -543,23 +498,16 @@ class _LoginScreenState extends State<LoginScreen>
         onPressed: _handleBiometricAuth,
         icon: Icon(
           Icons.fingerprint,
-          color: Colors.white.withValues(alpha: 0.9),
+          color: Theme.of(context).colorScheme.onSurface,
         ),
         label: Text(
           'Autenticación Biométrica',
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.9),
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.w500,
           ),
         ),
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(
-            color: Colors.white.withValues(alpha: 0.3),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
+        style: Theme.of(context).outlinedButtonTheme.style,
       ),
     );
   }
@@ -569,7 +517,7 @@ class _LoginScreenState extends State<LoginScreen>
       children: [
         Expanded(
           child: Divider(
-            color: Colors.white.withValues(alpha: 0.3),
+            color: Theme.of(context).dividerColor,
           ),
         ),
         Padding(
@@ -577,14 +525,14 @@ class _LoginScreenState extends State<LoginScreen>
           child: Text(
             'o',
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.6),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               fontSize: 14,
             ),
           ),
         ),
         Expanded(
           child: Divider(
-            color: Colors.white.withValues(alpha: 0.3),
+            color: Theme.of(context).dividerColor,
           ),
         ),
       ],
@@ -612,18 +560,18 @@ class BuilderAnimated extends StatelessWidget {
               end: Alignment.bottomRight,
               colors: [
                 Color.lerp(
-                  const Color(0xFF0F172A),
-                  const Color(0xFF1E293B),
+                  AppColors.DarkColor1,
+                  AppColors.DarkColor2,
                   _backgroundAnimation.value,
                 )!,
                 Color.lerp(
-                  const Color(0xFF1E3A8A),
-                  const Color(0xFF3B82F6),
+                  AppColors.primaryColor.shade800,
+                  AppColors.primaryColor.shade400,
                   (_backgroundAnimation.value + 0.3) % 1.0,
                 )!,
                 Color.lerp(
-                  const Color(0xFF3B82F6),
-                  const Color(0xFF60A5FA),
+                  AppColors.primaryColor.shade400,
+                  AppColors.primaryColor.shade200,
                   (_backgroundAnimation.value + 0.6) % 1.0,
                 )!,
               ],

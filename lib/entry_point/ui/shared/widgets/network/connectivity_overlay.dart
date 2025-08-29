@@ -92,7 +92,7 @@ class _ConnectivityOverlayState extends State<ConnectivityOverlay>
           return Opacity(
             opacity: _opacityAnimation.value,
             child: Container(
-              color: Colors.black.withValues(alpha: 0.3 * _opacityAnimation.value),
+              color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.3 * _opacityAnimation.value),
               child: Center(
                 child: Transform.scale(
                   scale: _scaleAnimation.value,
