@@ -90,41 +90,7 @@ class _CustomInputState extends State<CustomInput> {
             ),
             if (widget.tooltip != null) ...[
               const SizedBox(width: 6),
-              SuperTooltip(
-                controller: tooltipController,
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                borderRadius: 8,
-                arrowTipDistance: 8,
-                popupDirection: TooltipDirection.up,
-                showBarrier: false,
-                hasShadow: false,
-                elevation: 0, 
-                content: Material(
-                  color: Colors.transparent,
-                  child: Text(
-                    widget.tooltip!,
-                    style: TextStyle(
-            color: Theme.of(context).brightness == Brightness.dark 
-                ? Colors.white70 
-                : AppColors.blackColor,
-          ),
-                  ),
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    if (tooltipController.isVisible) {
-                      tooltipController.hideTooltip();
-                    } else {
-                      tooltipController.showTooltip();
-                    }
-                  },
-                  child: Icon(
-                    Icons.info_outline,
-                    size: 18,
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                  ),
-                ),
-              ),
+              _tooltip(context),
             ],
           ],
         ),
@@ -137,7 +103,7 @@ class _CustomInputState extends State<CustomInput> {
           validator: widget.validator,
           style: TextStyle(
             color: Theme.of(context).brightness == Brightness.dark 
-                ? Colors.white70 
+                ? AppColors.blackColor
                 : AppColors.blackColor,
           ),
           initialValue: widget.controller == null ? widget.initialValue : null,
@@ -147,11 +113,11 @@ class _CustomInputState extends State<CustomInput> {
             hintText: widget.hintText,
             hintStyle: TextStyle(
               color: Theme.of(context).brightness == Brightness.dark 
-                  ? Colors.white38 
+                  ? Colors.black54 
                   : AppColors.hintColor,
             ),
             filled: true,
-            fillColor: Theme.of(context).brightness == Brightness.dark 
+            fillColor: Theme.of(context).brightness == Brightness.light 
                 ? Theme.of(context).colorScheme.surface.withValues(alpha: 0.1)
                 : Colors.white,
             errorStyle: const TextStyle(
@@ -160,7 +126,7 @@ class _CustomInputState extends State<CustomInput> {
               fontWeight: FontWeight.w500,
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(50),
               borderSide: const BorderSide(
                 color: AppColors.errorColor,
                 width: 1.5,
@@ -173,12 +139,14 @@ class _CustomInputState extends State<CustomInput> {
                 width: 2.0,
               ),
             ),
+            focusColor:AppColors.ternaryColor,
+                
             contentPadding: const EdgeInsets.symmetric(
               vertical: 12,
               horizontal: 16,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(50),
               borderSide: BorderSide(
                 color: Theme.of(context).brightness == Brightness.dark 
                     ? Colors.grey.withValues(alpha: 0.3)
@@ -187,7 +155,7 @@ class _CustomInputState extends State<CustomInput> {
               ),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(50),
               borderSide: BorderSide(
                 color: Theme.of(context).brightness == Brightness.dark 
                     ? Colors.grey.withValues(alpha: 0.3)
@@ -196,10 +164,10 @@ class _CustomInputState extends State<CustomInput> {
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
-                color: Theme.of(context).colorScheme.primary,
-                width: 1.5,
+              borderRadius: BorderRadius.circular(50),
+              borderSide: const BorderSide(
+                color: AppColors.ternaryColor,
+                width: 2.5,
               ),
             ),
             prefixIcon: widget.icon != null &&
@@ -209,8 +177,8 @@ class _CustomInputState extends State<CustomInput> {
                     child: Icon(
                       widget.icon, 
                       color: Theme.of(context).brightness == Brightness.dark 
-                          ? Colors.white70 
-                          : AppColors.primaryColor,
+                          ? AppColors.primaryColor 
+                          : Colors.black,
                       size: 20,
                     ),
                   )
@@ -222,8 +190,8 @@ class _CustomInputState extends State<CustomInput> {
                     child: Icon(
                       widget.icon, 
                       color: Theme.of(context).brightness == Brightness.dark 
-                          ? Colors.white70 
-                          : AppColors.primaryColor,
+                          ? AppColors.primaryColor 
+                          : Colors.black,
                       size: 20,
                     ),
                   )
@@ -232,5 +200,49 @@ class _CustomInputState extends State<CustomInput> {
         ),
       ],
     );
+  }
+
+  SuperTooltip _tooltip(BuildContext context) {
+    return SuperTooltip(
+              controller: tooltipController,
+              backgroundColor:AppColors.ternaryColor,
+              borderRadius: 8,
+              arrowTipDistance: 5,
+              popupDirection: TooltipDirection.up,
+              showBarrier: false,
+              hasShadow: false,
+              elevation: 0, 
+
+              content: Container(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.8,
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: Text(
+                    widget.tooltip!,
+                    style: const TextStyle(
+                      color: AppColors.whiteColor,
+                    ),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                  ),
+                ),
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  if (tooltipController.isVisible) {
+                    tooltipController.hideTooltip();
+                  } else {
+                    tooltipController.showTooltip();
+                  }
+                },
+                child: const Icon(
+                  Icons.info_outline,
+                  size: 18,
+                  color: AppColors.ternaryColor,
+                ),
+              ),
+            );
   }
 }

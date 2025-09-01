@@ -14,11 +14,8 @@ import 'injector.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
   tz.initializeTimeZones();
-
   await configureInjection('main');
-
   final connectivityService = getIt<GlobalConnectivityService>();
   await GlobalConnectivityService.initialize(connectivityService);
 

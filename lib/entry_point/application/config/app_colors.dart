@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const int _primarColorValue = 0xFF003F85;
+  static const int _primarColorValue = 0xFF000000;
   static const int _accentColorValue = 0xFF5479FF;
-  static const int _secondaryColorValue = 0xFFF57E31;
+  static const int _secondaryColorValue = 0xFFC98214;
   static const blueColor = Color(0xff409CFF);
 
   static Color? _customPrimaryColor;
@@ -11,16 +11,16 @@ class AppColors {
   static Color? _customAccentColor;
 
   static const Map<int, Color> primaryColorCodes = {
-    50: Color(0xFFE0E8F0),
-    100: Color(0xFFB3C5DA),
-    200: Color(0xFF809FC2),
-    300: Color(0xFF4D79AA),
-    400: Color(0xFF265C97),
+    50: Color(0xFFE0E0E0),
+    100: Color(0xFFB3B3B3),
+    200: Color(0xFF808080),
+    300: Color(0xFF4D4D4D),
+    400: Color(0xFF262626),
     500: Color(_primarColorValue),
-    600: Color(0xFF00397D),
-    700: Color(0xFF003172),
-    800: Color(0xFF002968),
-    900: Color(0xFF001B55),
+    600: Color(0xFF000000),
+    700: Color(0xFF000000),
+    800: Color(0xFF000000),
+    900: Color(0xFF000000),
   };
 
   static const Map<int, Color> accentColorCodes = {
@@ -34,23 +34,23 @@ class AppColors {
   };
 
   static const Map<int, Color> secondaryColorCodes = {
-    50: Color(0xFFFEF0E6),
-    100: Color(0xFFFCD8C1),
-    200: Color(0xFFFABF98),
-    300: Color(0xFFF8A56F),
-    400: Color(0xFFF79150),
+    50: Color(0xFFFAF2E2),
+    100: Color(0xFFF5DDB7),
+    200: Color(0xFFEFC788),
+    300: Color(0xFFE9B158),
+    400: Color(0xFFE4A135),
     500: Color(_secondaryColorValue),
-    600: Color(0xFFF4762C),
-    700: Color(0xFFF26B25),
-    800: Color(0xFFF0611F),
-    900: Color(0xFFEE4E13),
+    600: Color(0xFFBD7A12),
+    700: Color(0xFFAA6E10),
+    800: Color(0xFF98620E),
+    900: Color(0xFF794D0B),
   };
 
   static const MaterialColor primaryColor = MaterialColor(_primarColorValue, primaryColorCodes);
   static const MaterialColor primaryColorDark = MaterialColor(_primarColorValue, primaryColorCodes);
   static const MaterialColor accentColor = MaterialColor(_accentColorValue, accentColorCodes);
   static const MaterialColor secondaryColor = MaterialColor(_secondaryColorValue, secondaryColorCodes);
-  static const MaterialColor ternaryColor = MaterialColor(0xFFF79150, secondaryColorCodes);
+  static const MaterialColor ternaryColor = MaterialColor(_secondaryColorValue, secondaryColorCodes);
 
   static Color get primary => _customPrimaryColor ?? primaryColor;
   static Color get accent => _customAccentColor ?? accentColor;

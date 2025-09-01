@@ -8,7 +8,7 @@ class AppConstants {
   static const Duration suracionToast = Duration(seconds: 8);
   static const String appName = 'Nexus suite';
   static const String suiteDescription = 'Suite de herramientas';
-  static const String empresa = 'Sunvalley';
+  static const String empresa = 'Nexus Suite';
 
 
 

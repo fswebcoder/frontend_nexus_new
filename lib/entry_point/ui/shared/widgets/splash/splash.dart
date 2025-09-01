@@ -256,14 +256,11 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                           Theme.of(context).colorScheme.surface.withValues(alpha: 0.05),
                         ],
                       ),
-                      border: Border.all(
-                        color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-                        width: 1,
-                      ),
+                  
                     ),
                     child: Center(
                       child: Image.asset(
-                        'assets/images/logo_svb.png',
+                        'assets/images/isotipo_text.png',
                         width: 100,
                         height: 100,
                         fit: BoxFit.contain,
@@ -310,25 +307,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 8),
-              // Subtítulo con mejor contraste
-              AnimatedBuilder(
-                animation: _subtitleWaveAnimation,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: _subtitleWaveAnimation.value.clamp(0.0, 1.0),
-                    child: Text(
-                      AppConstants.suiteDescription,
-                        style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.secondaryColor.shade200,
-                        letterSpacing: 3.0,
-                      ),
-                    ),
-                  );
-                },
               ),
             ],
           ),

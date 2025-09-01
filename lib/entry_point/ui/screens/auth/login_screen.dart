@@ -3,14 +3,16 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_nexus/entry_point/application/config/app_colors.dart';
+import 'package:frontend_nexus/entry_point/application/config/global_message.dart';
+import 'package:frontend_nexus/entry_point/ui/shared/widgets/forms/button/custom_principal_button.dart';
 import 'package:frontend_nexus/entry_point/ui/shared/widgets/index.dart';
-import 'package:frontend_nexus/entry_point/ui/shared/widgets/forms/textfield_strem_widget.dart';
+import 'package:frontend_nexus/entry_point/ui/shared/widgets/forms/textfield/textfield_strem_widget.dart';
 import 'package:local_auth/local_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -134,12 +136,11 @@ class _LoginScreenState extends State<LoginScreen>
     });
   }
 
-
   Future<void> _handleBiometricAuth() async {
     if (kIsWeb) {
       _scaffoldMessengerKey.currentState?.showSnackBar(
         SnackBar(
-          content: Text('Autenticación biométrica no disponible en web'),
+          content: const Text('Autenticación biométrica no disponible en web'),
           backgroundColor: Theme.of(context).colorScheme.secondary,
         ),
       );
@@ -156,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen>
 
       if (didAuthenticate) {
         _scaffoldMessengerKey.currentState?.showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Autenticación biométrica exitosa'),
             backgroundColor: AppColors.successColor,
           ),
@@ -212,7 +213,10 @@ class _LoginScreenState extends State<LoginScreen>
                           shape: BoxShape.circle,
                           gradient: RadialGradient(
                             colors: [
-                              Theme.of(context).colorScheme.surface.withValues(alpha: 0.1),
+                              Theme.of(context)
+                                  .colorScheme
+                                  .surface
+                                  .withValues(alpha: 0.1),
                               Colors.transparent,
                             ],
                           ),
@@ -238,7 +242,10 @@ class _LoginScreenState extends State<LoginScreen>
                           shape: BoxShape.circle,
                           gradient: RadialGradient(
                             colors: [
-                              Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                              Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withValues(alpha: 0.1),
                               Colors.transparent,
                             ],
                           ),
@@ -254,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen>
                 child: Center(
                   child: LayoutBuilder(
                     builder: (context, constraints) {
-                      final isWeb = kIsWeb;
+                      const isWeb = kIsWeb;
                       final screenHeight = constraints.maxHeight;
                       final useScroll =
                           screenHeight < 700; // Solo scroll si es muy pequeña
@@ -309,9 +316,10 @@ class _LoginScreenState extends State<LoginScreen>
       child: Padding(
         padding: EdgeInsets.only(top: isWeb ? 20 : 40),
         child: Text(
-          '© 2025 Quintana SAS',
+          GlobalMessage.derechosReservados,
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+            color:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
             fontSize: 12,
             fontWeight: FontWeight.w300,
           ),
@@ -332,15 +340,22 @@ class _LoginScreenState extends State<LoginScreen>
             constraints: const BoxConstraints(maxWidth: 500),
             padding: EdgeInsets.all(isWeb ? 24 : 28),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.1),
+              color:
+                  Theme.of(context).colorScheme.surface.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                color: Theme.of(context)
+                    .colorScheme
+                    .outline
+                    .withValues(alpha: 0.2),
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.1),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .shadow
+                      .withValues(alpha: 0.1),
                   blurRadius: 40,
                   spreadRadius: 0,
                 ),
@@ -353,10 +368,14 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+
+  
   AnimatedBuilder _logoCompany(bool isWeb, bool useScroll) {
     return AnimatedBuilder(
       animation: _logoAnimation,
       builder: (context, child) {
+        final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+        
         return Transform.scale(
           scale: _logoAnimation.value,
           child: Transform.translate(
@@ -368,8 +387,13 @@ class _LoginScreenState extends State<LoginScreen>
               ),
               child: Column(
                 children: [
-                  Image.asset('assets/images/logo_svb.png',
-                      height: isWeb ? 100 : 150),
+                  Container(
+                    height: isWeb ? 100 : 150,
+                    child: Image.asset(
+                      isDarkMode ? 'assets/images/blanco.png' : 'assets/images/logo_sv.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -389,13 +413,13 @@ class _LoginScreenState extends State<LoginScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomInput(
-                label: 'Email',
-                hintText: 'tu@empresa.com',
+                label: GlobalMessage.labelEmail,
+                hintText: GlobalMessage.hintEmail,
                 keyboardType: TextInputType.emailAddress,
                 obscureText: false,
                 icon: Icons.email_outlined,
                 iconPosition: IconPosition.left,
-                tooltip: 'Email',
+                tooltip: GlobalMessage.tooltipEmail,
                 controller: _emailController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -409,13 +433,13 @@ class _LoginScreenState extends State<LoginScreen>
               ),
               const SizedBox(height: 20),
               CustomInput(
-                label: 'Contraseña',
-                hintText: 'Ingresa tu contraseña',
+                label: GlobalMessage.labelPassword,
+                hintText: GlobalMessage.hintPassword,
                 controller: _passwordController,
                 obscureText: true,
                 icon: Icons.lock_outline,
                 iconPosition: IconPosition.left,
-                tooltip: 'Mínimo 6 caracteres',
+                tooltip: GlobalMessage.tooltipPassword,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingresa tu contraseña';
@@ -448,27 +472,13 @@ class _LoginScreenState extends State<LoginScreen>
     return SizedBox(
       width: double.infinity,
       height: 56,
-      child: ElevatedButton(
-        onPressed: null,
-        style: Theme.of(context).elevatedButtonTheme.style,
-        child: _isLoading
-            ? SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ),
-              )
-            : const Text(
-                'Iniciar Sesión',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+      child: CustomPrincipalButton(
+        onPressed: () {
+          log('onPressed');
+        },
+        color: AppColors.primary,
+        label: 'Iniciar sesión',
+        isLoading: false,
       ),
     );
   }
@@ -480,11 +490,16 @@ class _LoginScreenState extends State<LoginScreen>
         onPressed: () {},
         child: Text(
           '¿Olvidaste tu contraseña?',
-          style: Theme.of(context).textButtonTheme.style?.textStyle?.resolve({}) ?? TextStyle(
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
+          style:
+              Theme.of(context).textButtonTheme.style?.textStyle?.resolve({}) ??
+                  TextStyle(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.8),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
         ),
       ),
     );
@@ -525,7 +540,10 @@ class _LoginScreenState extends State<LoginScreen>
           child: Text(
             'o',
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.6),
               fontSize: 14,
             ),
           ),
